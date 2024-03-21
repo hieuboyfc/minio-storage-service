@@ -1,6 +1,6 @@
-package com.zimji.storage.api;
+package com.minio.storage.api;
 
-import com.zimji.storage.service.MinioAdapterService;
+import com.minio.storage.service.MinioAdapterService;
 import io.minio.messages.Bucket;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;

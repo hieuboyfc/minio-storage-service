@@ -1,4 +1,4 @@
-package com.zimji.storage;
+package com.minio.storage;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

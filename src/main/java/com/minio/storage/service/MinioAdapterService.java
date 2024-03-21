@@ -1,11 +1,14 @@
-package com.zimji.storage.service;
+package com.minio.storage.service;
 
+import com.minio.storage.config.MinioProperties;
 import io.minio.*;
 import io.minio.errors.MinioException;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.lang3.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,15 +24,13 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MinioAdapterService {
 
-    @Value("${minio.bucket.name}")
-    String defaultBucketName;
+    private static final Logger log = LoggerFactory.getLogger(MinioAdapterService.class);
 
-    @Value("${minio.default.folder}")
-    String defaultBaseFolder;
-
+    private final MinioProperties minioProperties;
     private final MinioClient minioClient;
 
-    public MinioAdapterService(MinioClient minioClient) {
+    public MinioAdapterService(MinioProperties minioProperties, MinioClient minioClient) {
+        this.minioProperties = minioProperties;
         this.minioClient = minioClient;
     }
 
@@ -49,20 +50,20 @@ public class MinioAdapterService {
         try {
             InputStream inputStream = file.getInputStream();
             ObjectWriteResponse response = minioClient.putObject(PutObjectArgs.builder()
-                    .bucket(defaultBucketName)
+                    .bucket(minioProperties.getBucket().getName())
                     .object(file.getOriginalFilename())
                     .stream(inputStream, inputStream.available(), -1)
                     .build());
 
-            if (response != null) {
-                System.out.println("File " + file.getOriginalFilename() + " uploaded successfully.");
+            if (ObjectUtils.isNotEmpty(response)) {
+                log.info("File: {} uploaded successfully.", file.getOriginalFilename());
             } else {
-                System.out.println("Failed to upload file " + file.getOriginalFilename());
+                log.error("File: {} upload failed.", file.getOriginalFilename());
             }
         } catch (MinioException e) {
-            throw new RuntimeException("Failed to upload file " + file.getOriginalFilename(), e);
+            throw new RuntimeException("Error occurred while pushing file: " + file.getOriginalFilename(), e);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -70,16 +71,15 @@ public class MinioAdapterService {
         try {
             return minioClient.getObject(
                     GetObjectArgs.builder()
-                            .bucket(defaultBucketName)
+                            .bucket(minioProperties.getBucket().getName())
                             .object(fileName)
                             .build()
             );
         } catch (MinioException e) {
-            throw new RuntimeException("Failed to download file " + fileName, e);
+            throw new RuntimeException("Error occurred while downloading file: " + fileName, e);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-        return null;
     }
 
     public String getTempUrl(String objectName)
@@ -89,12 +89,12 @@ public class MinioAdapterService {
         String url = minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
                         .method(Method.GET)
-                        .bucket(defaultBucketName)
+                        .bucket(minioProperties.getBucket().getName())
                         .object(objectName)
                         .expiry(2, TimeUnit.HOURS)
                         .extraQueryParams(requestParams)
                         .build());
-        System.out.println(url);
+        log.info(url);
         return url;
     }
 

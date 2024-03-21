@@ -24,9 +24,16 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.springframework:spring-context'
 
     // AWS SDK for Java (MinIO Client)
     implementation 'io.minio:minio:8.5.4'
+
+    // bcprov-jdk15on
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+
+    // snappy-java
+    implementation 'org.xerial.snappy:snappy-java:1.1.10.5'
 
     // springfox-swagger2
     implementation 'io.springfox:springfox-swagger2:2.8.0'
@@ -35,12 +42,21 @@ dependencies {
     implementation 'io.springfox:springfox-swagger-ui:2.8.0'
 
     // commons-file-upload
-    implementation 'commons-fileupload:commons-fileupload:1.3.1'
+    implementation 'commons-fileupload:commons-fileupload:1.3.3'
 
-    // Commons IO
+    // commons-io
     implementation 'commons-io:commons-io:2.11.0'
 
-    // Lombok
+    // commons-lang3
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    // commons-compress
+    implementation 'org.apache.commons:commons-compress:1.24.0'
+
+    // dotenv-java
+    implementation 'io.github.cdimascio:dotenv-java:2.2.0'
+
+    // lombok
     implementation 'org.projectlombok:lombok:1.18.18'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
