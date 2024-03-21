@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: minio-storage-service
+
+server:
+  port: 4953
+
+minio:
+  bucket:
+    name: test
+  default:
+    folder: /
+  access:
+    name: minioadmin
+    secret: minioadmin
+  url: http://127.0.0.1:9000
+
