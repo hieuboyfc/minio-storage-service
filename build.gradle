@@ -24,6 +24,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework:spring-context'
 
     // AWS SDK for Java (MinIO Client)
@@ -34,6 +36,9 @@ dependencies {
 
     // snappy-java
     implementation 'org.xerial.snappy:snappy-java:1.1.10.5'
+
+    // tika-core
+    implementation 'org.apache.tika:tika-core:1.27'
 
     // springfox-swagger2
     implementation 'io.springfox:springfox-swagger2:2.8.0'
@@ -47,20 +52,40 @@ dependencies {
     // commons-io
     implementation 'commons-io:commons-io:2.11.0'
 
+    // commons-lang
+    implementation 'commons-lang:commons-lang:2.6'
+
     // commons-lang3
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
     // commons-compress
     implementation 'org.apache.commons:commons-compress:1.24.0'
 
+    // commons-pool
+    implementation 'org.apache.commons:commons-pool2:2.11.1'
+
+    // gson
+    implementation 'com.google.code.gson:gson:2.8.8'
+
+    // jackson-databind
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+
     // dotenv-java
     implementation 'io.github.cdimascio:dotenv-java:2.2.0'
 
+    // modelmapper
+    implementation 'org.modelmapper:modelmapper:2.4.0'
+
     // lombok
-    implementation 'org.projectlombok:lombok:1.18.18'
+    implementation 'org.projectlombok:lombok:1.18.22'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    runtimeOnly "org.postgresql:postgresql"
+
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

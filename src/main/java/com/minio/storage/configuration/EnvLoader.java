@@ -1,4 +1,4 @@
-package com.minio.storage.config;
+package com.minio.storage.configuration;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.stereotype.Component;

@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:172.16.101.39}:${DB_PORT:5432}/${DB_NAME:acvn}?stringtype=unspecified
+    username: ${DB_USERNAME:xdp}
+    password: ${DB_PASSWORD:gjEyCJRruMz28kw96OWXy5JBN9pOROXT}
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Chế độ tạo bảng: create / update / none
+      ddl-auto: update
+    properties:
+      hibernate:
+        # Loại hibernate dialect cho PostgreSQL
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        # default_schema: storage_service
+  flyway:
+    schemas:
+      - storage_service
+    enabled: false

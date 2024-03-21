@@ -1,6 +1,6 @@
 package com.minio.storage.service;
 
-import com.minio.storage.config.MinioProperties;
+import com.minio.storage.configuration.MinioProperties;
 import io.minio.*;
 import io.minio.errors.MinioException;
 import io.minio.http.Method;
