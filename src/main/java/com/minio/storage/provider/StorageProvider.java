@@ -1,3 +1,4 @@
+/*
 package com.minio.storage.provider;
 
 import com.minio.storage.dto.FileAttributeDTO;
@@ -76,3 +77,4 @@ public interface StorageProvider {
     void removeCannedPolicy(String name);
 
 }
+*/

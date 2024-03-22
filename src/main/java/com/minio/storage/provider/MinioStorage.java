@@ -1,3 +1,4 @@
+/*
 package com.minio.storage.provider;
 
 import com.google.gson.JsonObject;
@@ -14,3 +15,4 @@ public class MinioStorage extends AbstractStorage {
         super(env, mediaProcess, config);
     }
 }
+*/

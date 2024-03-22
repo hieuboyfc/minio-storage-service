@@ -1,3 +1,4 @@
+/*
 package com.minio.storage.process;
 
 import com.minio.storage.dto.FileAttributeDTO;
@@ -40,3 +41,4 @@ public class MediaProcess {
     }
 
 }
+*/

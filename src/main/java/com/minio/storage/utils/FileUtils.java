@@ -25,7 +25,7 @@ public class FileUtils {
             MimeType mimeType = tikaConfig.getMimeRepository().forName(getContentType(tikaConfig, content));
             return mimeType.getExtension().split("\\.")[1];
         } catch (Exception e) {
-            throw new IOException(BaseState.ResponseCode.FILE_NOT_DETECT.getCode(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -33,7 +33,7 @@ public class FileUtils {
         try {
             return getContentType(new TikaConfig(), content);
         } catch (Exception e) {
-            throw new IOException(BaseState.ResponseCode.FILE_NOT_DETECT.getCode(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -45,7 +45,7 @@ public class FileUtils {
             MediaType mediaType = detector.detect(stream, metadata);
             return mediaType.toString();
         } catch (Exception e) {
-            throw new IOException(BaseState.ResponseCode.FILE_NOT_DETECT.getCode(), e);
+            throw new IOException(e.getMessage());
         }
     }
 

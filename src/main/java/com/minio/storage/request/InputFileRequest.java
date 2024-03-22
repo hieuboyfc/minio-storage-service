@@ -25,4 +25,6 @@ public class InputFileRequest {
 
     private String bucketName;
 
+    private String objectName;
+
 }

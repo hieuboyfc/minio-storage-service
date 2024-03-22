@@ -1,3 +1,4 @@
+/*
 package com.minio.storage.provider;
 
 import com.google.gson.JsonObject;
@@ -205,3 +206,4 @@ public abstract class AbstractStorage implements StorageProvider {
 
     }
 }
+*/

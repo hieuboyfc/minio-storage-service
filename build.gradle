@@ -82,6 +82,12 @@ dependencies {
     // ffmpeg
     implementation 'net.bramp.ffmpeg:ffmpeg:0.8.0'
 
+    // zip4j - (zip)
+    implementation 'net.lingala.zip4j:zip4j:2.7.0'
+
+    // truezip-file - (tar)
+    implementation 'de.schlichtherle.truezip:truezip-file:7.7'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     runtimeOnly "org.postgresql:postgresql"
