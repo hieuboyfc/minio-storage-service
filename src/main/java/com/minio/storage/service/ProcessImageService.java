@@ -3,6 +3,7 @@ package com.minio.storage.service;
 import com.minio.storage.request.InputFileRequest;
 import com.minio.storage.request.ResizeRequest;
 import com.minio.storage.request.ThumbnailRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,13 +16,10 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class ImageProcessService {
+@RequiredArgsConstructor
+public class ProcessImageService {
 
-    private final MinioAdapterService minioAdapterService;
-
-    public ImageProcessService(MinioAdapterService minioAdapterService) {
-        this.minioAdapterService = minioAdapterService;
-    }
+    private final MinioUploadService minioUploadService;
 
     public CompletableFuture<Void> convertImageFormatAsync(MultipartFile file, InputFileRequest request) {
         return CompletableFuture.runAsync(() -> {
@@ -35,7 +33,9 @@ public class ImageProcessService {
 
                 // Upload file
                 request.setFolderName("convert");
-                minioAdapterService.uploadFileToMinIOAsync(request, new ByteArrayInputStream(outputStream.toByteArray())).join();
+                minioUploadService
+                        .uploadFileToMinIOAsync(new ByteArrayInputStream(outputStream.toByteArray()), request)
+                        .join();
             } catch (IOException e) {
                 throw new RuntimeException("Failed to convert image format: " + e.getMessage());
             }
@@ -64,7 +64,9 @@ public class ImageProcessService {
 
                 // Upload file
                 request.setFolderName("resize");
-                minioAdapterService.uploadFileToMinIOAsync(request, new ByteArrayInputStream(outputStream.toByteArray())).join();
+                minioUploadService
+                        .uploadFileToMinIOAsync(new ByteArrayInputStream(outputStream.toByteArray()), request)
+                        .join();
             } catch (IOException e) {
                 throw new RuntimeException("Failed to resize image: " + e.getMessage());
             }
@@ -94,7 +96,9 @@ public class ImageProcessService {
 
                 // Upload file
                 request.setFolderName("thumbnail");
-                minioAdapterService.uploadFileToMinIOAsync(request, new ByteArrayInputStream(outputStream.toByteArray())).join();
+                minioUploadService
+                        .uploadFileToMinIOAsync(new ByteArrayInputStream(outputStream.toByteArray()), request)
+                        .join();
             } catch (IOException e) {
                 throw new RuntimeException("Failed to create thumbnail: " + e.getMessage());
             }

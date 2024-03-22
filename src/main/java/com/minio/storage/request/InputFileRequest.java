@@ -23,4 +23,6 @@ public class InputFileRequest {
 
     private String folderName;
 
+    private String bucketName;
+
 }

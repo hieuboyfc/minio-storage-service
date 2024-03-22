@@ -18,11 +18,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class VideoProcessService {
+public class ProcessVideoService {
 
     private final FFmpegExecutor ffmpegExecutor;
 
-    public VideoProcessService() throws IOException {
+    public ProcessVideoService() throws IOException {
         this.ffmpegExecutor = new FFmpegExecutor(new FFmpeg());
     }
 

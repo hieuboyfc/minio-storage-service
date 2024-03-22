@@ -3,7 +3,7 @@ package com.minio.storage.api;
 import com.minio.storage.request.InputFileRequest;
 import com.minio.storage.request.ResizeRequest;
 import com.minio.storage.request.ThumbnailRequest;
-import com.minio.storage.service.ImageProcessService;
+import com.minio.storage.service.ProcessImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,21 +16,23 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/images")
-@Tag(name = "ImageProcessAPI", description = "Image Process API")
-public class ImageProcessAPI {
+@Tag(name = "ProcessImageAPI", description = "Process Image API")
+public class ProcessImageAPI {
 
-    private final ImageProcessService imageProcessService;
+    private final ProcessImageService processImageService;
 
-    public ImageProcessAPI(ImageProcessService imageProcessService) {
-        this.imageProcessService = imageProcessService;
+    public ProcessImageAPI(ProcessImageService processImageService) {
+        this.processImageService = processImageService;
     }
 
     @PostMapping("/convert")
     @Operation(summary = "Convert image format")
-    public ResponseEntity<String> convertImageFormat(@Parameter(description = "Request File") @RequestParam("file") MultipartFile file,
-                                                     @Parameter(description = "Payload Request") @RequestBody InputFileRequest request) {
+    public ResponseEntity<String> convertImageFormat(
+            @Parameter(description = "Request File") @RequestParam("file") MultipartFile file,
+            @Parameter(description = "Payload Request") @RequestBody InputFileRequest request
+    ) {
         try {
-            CompletableFuture<Void> future = imageProcessService.convertImageFormatAsync(file, request);
+            CompletableFuture<Void> future = processImageService.convertImageFormatAsync(file, request);
             future.join();
             return new ResponseEntity<>("Image converted successfully", HttpStatus.OK);
         } catch (Exception e) {
@@ -40,10 +42,12 @@ public class ImageProcessAPI {
 
     @PostMapping("/resize")
     @Operation(summary = "Resize image")
-    public ResponseEntity<String> resizeImage(@Parameter(description = "Request File") @RequestParam("file") MultipartFile file,
-                                              @Parameter(description = "Payload Request") @RequestBody ResizeRequest request) {
+    public ResponseEntity<String> resizeImage(
+            @Parameter(description = "Request File") @RequestParam("file") MultipartFile file,
+            @Parameter(description = "Payload Request") @RequestBody ResizeRequest request
+    ) {
         try {
-            CompletableFuture<Void> future = imageProcessService.resizeImageAsync(file, request);
+            CompletableFuture<Void> future = processImageService.resizeImageAsync(file, request);
             future.join();
             return new ResponseEntity<>("Image resized successfully", HttpStatus.OK);
         } catch (Exception e) {
@@ -53,10 +57,12 @@ public class ImageProcessAPI {
 
     @PostMapping("/thumbnail")
     @Operation(summary = "Create thumbnail")
-    public ResponseEntity<String> createThumbnail(@Parameter(description = "Request File") @RequestParam("file") MultipartFile file,
-                                                  @Parameter(description = "Payload Request") @RequestBody ThumbnailRequest request) {
+    public ResponseEntity<String> createThumbnail(
+            @Parameter(description = "Request File") @RequestParam("file") MultipartFile file,
+            @Parameter(description = "Payload Request") @RequestBody ThumbnailRequest request
+    ) {
         try {
-            CompletableFuture<Void> future = imageProcessService.createThumbnailAsync(file, request);
+            CompletableFuture<Void> future = processImageService.createThumbnailAsync(file, request);
             future.join();
             return new ResponseEntity<>("Thumbnail created successfully", HttpStatus.OK);
         } catch (Exception e) {

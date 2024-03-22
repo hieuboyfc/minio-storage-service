@@ -1,40 +1,31 @@
 package com.minio.storage.api;
 
 import com.minio.storage.service.MinioAdapterService;
+import com.minio.storage.service.MinioBucketService;
 import io.minio.messages.Bucket;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStream;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class MinioStorageAPI {
 
     private final MinioAdapterService minioAdapterService;
-
-    public MinioStorageAPI(MinioAdapterService minioAdapterService) {
-        this.minioAdapterService = minioAdapterService;
-    }
+    private final MinioBucketService minioBucketService;
 
     @GetMapping(path = "/buckets")
     public List<Bucket> listBuckets() {
-        return minioAdapterService.getAllBuckets();
-    }
-
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        try {
-            minioAdapterService.uploadFile(file);
-            return ResponseEntity.ok("File uploaded successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file.");
-        }
+        return minioBucketService.getAllBuckets();
     }
 
     @GetMapping("/download/{fileName}")
