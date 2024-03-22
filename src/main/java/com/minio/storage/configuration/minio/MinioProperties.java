@@ -1,4 +1,4 @@
-package com.minio.storage.configuration;
+package com.minio.storage.configuration.minio;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

@@ -28,6 +28,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework:spring-context'
 
+    // springdoc-openapi-ui
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.12'
+
     // AWS SDK for Java (MinIO Client)
     implementation 'io.minio:minio:8.5.4'
 
@@ -70,14 +73,14 @@ dependencies {
     // jackson-databind
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 
-    // dotenv-java
-    implementation 'io.github.cdimascio:dotenv-java:2.2.0'
-
     // modelmapper
     implementation 'org.modelmapper:modelmapper:2.4.0'
 
     // lombok
     implementation 'org.projectlombok:lombok:1.18.22'
+
+    // ffmpeg
+    implementation 'net.bramp.ffmpeg:ffmpeg:0.8.0'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 

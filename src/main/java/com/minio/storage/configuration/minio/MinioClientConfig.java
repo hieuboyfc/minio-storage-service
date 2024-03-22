@@ -1,4 +1,4 @@
-package com.minio.storage.configuration;
+package com.minio.storage.configuration.minio;
 
 import io.minio.MinioClient;
 import org.springframework.context.annotation.Bean;

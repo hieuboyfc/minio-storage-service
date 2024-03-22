@@ -1,6 +1,8 @@
 package com.minio.storage.service;
 
-import com.minio.storage.configuration.MinioProperties;
+import com.minio.storage.configuration.minio.MinioProperties;
+import com.minio.storage.request.InputFileRequest;
+import com.minio.storage.utils.StringGeneratorUtils;
 import io.minio.*;
 import io.minio.errors.MinioException;
 import io.minio.http.Method;
@@ -19,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -96,6 +99,51 @@ public class MinioAdapterService {
                         .build());
         log.info(url);
         return url;
+    }
+
+    public CompletableFuture<String> uploadFileToMinIO(MultipartFile file) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                // Tạo tên file duy nhất
+                String uniqueFileName = StringGeneratorUtils.getRandomString() + "-" + file.getOriginalFilename();
+
+                InputStream inputStream = file.getInputStream();
+                ObjectWriteResponse response = minioClient.putObject(PutObjectArgs.builder()
+                        .bucket(minioProperties.getBucket().getName())
+                        .object(uniqueFileName)
+                        .stream(inputStream, inputStream.available(), -1)
+                        .build());
+
+                if (ObjectUtils.isNotEmpty(response)) {
+                    log.info("File: {} uploaded successfully.", uniqueFileName);
+                } else {
+                    log.error("File: {} upload failed.", uniqueFileName);
+                }
+                return minioProperties.getUrl() + "/" + minioProperties.getBucket().getName() + "/" + uniqueFileName;
+            } catch (MinioException e) {
+                throw new RuntimeException("Error occurred while pushing file: " + file.getOriginalFilename(), e);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        });
+    }
+
+    public CompletableFuture<Void> uploadFileToMinIOAsync(InputFileRequest request, InputStream inputStream) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                String uniqueFileName = request.getFolderName() + "/" + request.getOutputFilePath();
+
+                minioClient.putObject(PutObjectArgs.builder()
+                        .bucket(minioProperties.getBucket().getName())
+                        .object(uniqueFileName)
+                        .stream(inputStream, inputStream.available(), -1)
+                        .build());
+            } catch (MinioException e) {
+                throw new RuntimeException("Error occurred while pushing file: " + request.getOutputFilePath(), e);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        });
     }
 
 }

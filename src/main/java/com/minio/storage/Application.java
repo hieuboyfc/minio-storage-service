@@ -1,6 +1,6 @@
 package com.minio.storage;
 
-import com.minio.storage.configuration.MinioProperties;
+import com.minio.storage.configuration.minio.MinioProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
