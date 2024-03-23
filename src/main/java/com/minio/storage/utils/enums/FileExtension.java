@@ -5,16 +5,16 @@ import lombok.Getter;
 @Getter
 public enum FileExtension {
 
-    TXT("txt"),
-    PDF("pdf"),
-    DOC("doc"),
-    DOCX("docx"),
-    JPEG("jpeg"),
-    JPG("jpg"),
-    PNG("png"),
-    RAR("rar"),
-    TAR("tar"),
-    ZIP("zip");
+    TXT("TXT"),
+    PDF("PDF"),
+    DOC("DOC"),
+    DOCX("DOCX"),
+    JPEG("JPEG"),
+    JPG("JPG"),
+    PNG("PNG"),
+    RAR("RAR"),
+    TAR("TAR"),
+    ZIP("ZIP");
     // Thêm các phần mở rộng tệp khác nếu cần
 
     private final String name;
