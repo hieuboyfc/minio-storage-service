@@ -8,9 +8,7 @@ import net.lingala.zip4j.model.enums.CompressionLevel;
 import net.lingala.zip4j.model.enums.CompressionMethod;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -19,6 +17,21 @@ import java.util.zip.ZipOutputStream;
 
 @Log4j2
 public class ZipUtils {
+
+    private static final int BUFFER_SIZE = 1024;
+
+    public static byte[] compressToZip(byte[] fileData) throws IOException {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+             ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
+            ZipEntry entry = new ZipEntry("file"); // Tên tệp tin trong ZIP, có thể thay đổi
+            zipOutputStream.putNextEntry(entry);
+            zipOutputStream.write(fileData);
+            zipOutputStream.closeEntry();
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new IOException("Failed to compress files to ZIP: " + e.getMessage(), e);
+        }
+    }
 
     public static byte[] compressToZip(List<File> files) throws IOException {
         try (java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream()) {
@@ -80,8 +93,8 @@ public class ZipUtils {
             }
             zipOutputStream.closeEntry();
         } else {
-            // If file size exceeds the max size, split the file into parts
-            long numParts = (fileSize + maxFileSize - 1) / maxFileSize; // Ceiling division
+            // Nếu kích thước tệp vượt quá kích thước tối đa, chia tệp thành các phần
+            long numParts = (fileSize + maxFileSize - 1) / maxFileSize; // Phép chia lên
             try (FileInputStream fis = new FileInputStream(file)) {
                 byte[] buffer = new byte[1024];
                 int length;
@@ -98,6 +111,119 @@ public class ZipUtils {
             }
         }
     }
+
+    public static List<File> splitFilesToZip(File file, long maxFileSize) {
+        List<File> zipParts = new ArrayList<>();
+
+        try (FileInputStream fis = new FileInputStream(file);
+             BufferedInputStream bis = new BufferedInputStream(fis)) {
+
+            long fileSize = file.length();
+
+            if (fileSize <= maxFileSize) {
+                // Nếu kích thước của tệp nhỏ hơn hoặc bằng kích thước tối đa, thêm toàn bộ tệp vào danh sách
+                zipParts.add(file);
+            } else {
+                // Nếu kích thước của tệp vượt quá kích thước tối đa, chia tệp thành các phần
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int partIndex = 1;
+                long bytesWritten = 0;
+
+                while (true) {
+                    File partFile = new File(file.getParent(), file.getName() + ".part" + partIndex);
+                    try (FileOutputStream fos = new FileOutputStream(partFile);
+                         BufferedOutputStream bos = new BufferedOutputStream(fos)) {
+                        int bytesRead = bis.read(buffer);
+                        if (bytesRead == -1) {
+                            // Nếu không còn dữ liệu nào để đọc nữa, thoát khỏi vòng lặp
+                            break;
+                        }
+                        bos.write(buffer, 0, bytesRead);
+                        zipParts.add(partFile);
+                        bytesWritten += bytesRead;
+
+                        if (bytesWritten >= maxFileSize) {
+                            partIndex++;
+                            bytesWritten = 0;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return zipParts;
+    }
+
+    public static List<byte[]> splitFilesToZip(byte[] file, long maxFileSize) {
+        List<byte[]> zipParts = new ArrayList<>();
+
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(file);
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(bis)) {
+
+            long dataSize = file.length;
+
+            if (dataSize <= maxFileSize) {
+                // Nếu kích thước của dữ liệu nhỏ hơn hoặc bằng kích thước tối đa, thêm toàn bộ dữ liệu vào danh sách
+                zipParts.add(file.clone());
+            } else {
+                // Nếu kích thước của dữ liệu vượt quá kích thước tối đa, chia dữ liệu thành các phần
+                byte[] buffer = new byte[BUFFER_SIZE];
+                long bytesWritten = 0;
+
+                int bytesRead;
+                try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                    while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                        bytesWritten += bytesRead;
+
+                        if (bytesWritten >= maxFileSize) {
+                            zipParts.add(outputStream.toByteArray());
+                            outputStream.reset();
+                            bytesWritten = 0;
+                        }
+                    }
+
+                    // Thêm phần cuối cùng nếu còn dữ liệu
+                    if (outputStream.size() > 0) {
+                        zipParts.add(outputStream.toByteArray());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return zipParts;
+    }
+
+    /*public static void main(String[] args) {
+        // Example usage
+        try {
+            // Splitting a byte array
+            byte[] data = "This is a test string to split into ZIP parts".getBytes();
+            long maxFileSize = 20; // Example max file size
+            List<byte[]> zipPartsByteArray = splitFilesToZip(data, maxFileSize);
+            for (int i = 0; i < zipPartsByteArray.size(); i++) {
+                byte[] part = zipPartsByteArray.get(i);
+                // Do something with each part (e.g., save to disk, send over network, etc.)
+                System.out.println("Byte array part " + (i + 1) + ": " + new String(part));
+            }
+
+            // Splitting a file
+            File inputFile = new File("input.txt"); // Example input file
+            long maxFileSize2 = 50; // Example max file size
+            List<File> zipPartsFiles = splitFilesToZip(inputFile, maxFileSize2);
+            for (int i = 0; i < zipPartsFiles.size(); i++) {
+                File partFile = zipPartsFiles.get(i);
+                // Do something with each part file (e.g., save to disk, send over network, etc.)
+                System.out.println("File part " + (i + 1) + ": " + partFile.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
 
     public static void main(String[] args) throws IOException {
         // Example usage:

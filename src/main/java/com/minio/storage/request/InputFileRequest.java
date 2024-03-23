@@ -27,4 +27,8 @@ public class InputFileRequest {
 
     private String objectName;
 
+    private Boolean isCompressFile;
+
+    private String typeCompressFile;
+
 }
