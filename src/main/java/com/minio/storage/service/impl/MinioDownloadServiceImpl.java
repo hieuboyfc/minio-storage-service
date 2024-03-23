@@ -2,7 +2,7 @@ package com.minio.storage.service.impl;
 
 import com.minio.storage.request.InputFileRequest;
 import com.minio.storage.service.MinioDownloadService;
-import com.minio.storage.utils.FileRequestUtils;
+import com.minio.storage.utils.FindOptionalUtils;
 import com.minio.storage.utils.FileUtils;
 import com.minio.storage.utils.compression.RarUtils;
 import com.minio.storage.utils.compression.TarUtils;
@@ -65,12 +65,12 @@ public class MinioDownloadServiceImpl implements MinioDownloadService {
                 filesData.add(fileData);
             }
 
-            boolean isCompressFile = FileRequestUtils.findFirstField(
+            boolean isCompressFile = FindOptionalUtils.findFirstField(
                     requests, InputFileRequest::getIsCompressFile,
                     InputFileRequest::getIsCompressFile, false
             );
 
-            String typeCompressFile = FileRequestUtils.findFirstField(
+            String typeCompressFile = FindOptionalUtils.findFirstField(
                     requests, o -> ObjectUtils.isNotEmpty(o.getTypeCompressFile()),
                     InputFileRequest::getTypeCompressFile, "rar"
             );

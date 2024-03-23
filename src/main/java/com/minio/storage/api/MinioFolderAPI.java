@@ -2,14 +2,17 @@ package com.minio.storage.api;
 
 import com.minio.storage.request.InputFileRequest;
 import com.minio.storage.service.MinioFolderService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.CompletableFuture;
 
+@Getter
 @RestController
 @RequestMapping("/api/folder")
 @Tag(name = "MinioFolderAPI", description = "Minio Folder API")
@@ -22,14 +25,16 @@ public class MinioFolderAPI {
     }
 
     @PostMapping
-    public CompletableFuture<ResponseEntity<?>> createFolder(
+    @Operation(summary = "MinIO - Create Folder", description = "MinIO - Create Folder", tags = {"MinioFolderAPI"})
+    public CompletableFuture<ResponseEntity<String>> createFolder(
             @Parameter(description = "Payload Request") @RequestBody InputFileRequest request
     ) {
         try {
-            return service.createFolder(request).thenApply(folder -> ResponseEntity.ok().body(folder));
+            return getService().createFolder(request)
+                    .thenApply(ResponseEntity::ok)
+                    .exceptionally(throwable -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         } catch (Exception e) {
-            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to create folder on MinIO: " + e.getMessage()));
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         }
     }
 

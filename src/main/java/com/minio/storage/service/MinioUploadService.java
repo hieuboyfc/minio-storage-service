@@ -1,6 +1,6 @@
 package com.minio.storage.service;
 
-import com.minio.storage.entities.File;
+import com.minio.storage.entities.FileInfo;
 import com.minio.storage.request.InputFileRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,7 +12,7 @@ public interface MinioUploadService {
 
     void uploadFile(MultipartFile multipartFile, InputFileRequest request);
 
-    CompletableFuture<List<File>> uploadMultipleFiles(List<MultipartFile> files, InputFileRequest request);
+    CompletableFuture<List<FileInfo>> uploadMultipleFiles(List<MultipartFile> files, InputFileRequest request);
 
     CompletableFuture<Void> uploadFileToMinIOAsync(InputStream inputStream, InputFileRequest request);
 

@@ -1,4 +1,4 @@
-package com.minio.storage.factory;
+package com.minio.storage.utils.factory;
 
 import com.minio.storage.request.VideoSettingRequest;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;

@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "file", indexes = {
+@Table(name = "file_info", indexes = {
         @Index(name = "hash_file_idx", columnList = "hash"),
         @Index(name = "folder_file_idx", columnList = "folder")
 })
@@ -18,7 +18,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class File extends XPersistableEntity {
+public class FileInfo extends XPersistableEntity {
 
     @Id
     @Column(length = 50)
@@ -57,20 +57,20 @@ public class File extends XPersistableEntity {
 
     private String openkmId;
 
-    public static File of(Long cid, String uid, String folder, String provider,
-                          Object dto, String type, String publishType) {
-        File file = MapperUtils.map(dto, File.class);
-        file.setCompanyId(cid);
-        file.setFolder(folder);
-        file.setProvider(provider);
-        file.setCreateBy(uid);
-        file.setUpdateBy(uid);
-        file.setLabel(file.getName());
-        file.setStatus(Constants.STATUS_ACTIVE);
-        file.setType(type);
-        file.setPublishType(publishType);
-        file.setUserId(uid);
-        return file;
+    public static FileInfo of(Long cid, String uid, String folder, String provider,
+                              Object dto, String type, String publishType) {
+        FileInfo fileInfo = MapperUtils.map(dto, FileInfo.class);
+        fileInfo.setCompanyId(cid);
+        fileInfo.setFolder(folder);
+        fileInfo.setProvider(provider);
+        fileInfo.setCreateBy(uid);
+        fileInfo.setUpdateBy(uid);
+        fileInfo.setLabel(fileInfo.getName());
+        fileInfo.setStatus(Constants.STATUS_ACTIVE);
+        fileInfo.setType(type);
+        fileInfo.setPublishType(publishType);
+        fileInfo.setUserId(uid);
+        return fileInfo;
     }
 
     public FileAttributeDTO toAttribute() {

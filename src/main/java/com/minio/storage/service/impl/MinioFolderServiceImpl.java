@@ -19,7 +19,7 @@ public class MinioFolderServiceImpl implements MinioFolderService {
     private final MinioBucketService minioBucketService;
 
     @Override
-    public CompletableFuture<?> createFolder(InputFileRequest request) {
+    public CompletableFuture<String> createFolder(InputFileRequest request) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 String folderPath = request.getFolderName() + "/";

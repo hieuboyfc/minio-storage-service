@@ -7,6 +7,7 @@ import com.minio.storage.service.ProcessImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,59 +15,60 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.concurrent.CompletableFuture;
 
+@Getter
 @RestController
 @RequestMapping("/api/images")
 @Tag(name = "ProcessImageAPI", description = "Process Image API")
 public class ProcessImageAPI {
 
-    private final ProcessImageService processImageService;
+    private final ProcessImageService service;
 
-    public ProcessImageAPI(ProcessImageService processImageService) {
-        this.processImageService = processImageService;
+    public ProcessImageAPI(ProcessImageService service) {
+        this.service = service;
     }
 
     @PostMapping("/convert")
-    @Operation(summary = "Convert image format")
-    public ResponseEntity<String> convertImageFormat(
+    @Operation(summary = "MinIO - Convert Image Format", description = "MinIO - Convert Image Format", tags = {"ProcessImageAPI"})
+    public CompletableFuture<ResponseEntity<Void>> convertImageFormat(
             @Parameter(description = "Request File") @RequestParam("file") MultipartFile file,
             @Parameter(description = "Payload Request") @RequestBody InputFileRequest request
     ) {
         try {
-            CompletableFuture<Void> future = processImageService.convertImageFormatAsync(file, request);
-            future.join();
-            return new ResponseEntity<>("Image converted successfully", HttpStatus.OK);
+            return getService().convertImageFormatAsync(file, request)
+                    .thenApply(ResponseEntity::ok)
+                    .exceptionally(throwable -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to convert image: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         }
     }
 
     @PostMapping("/resize")
-    @Operation(summary = "Resize image")
-    public ResponseEntity<String> resizeImage(
+    @Operation(summary = "MinIO - Resize Image", description = "MinIO - Resize Image", tags = {"ProcessImageAPI"})
+    public CompletableFuture<ResponseEntity<Void>> resizeImage(
             @Parameter(description = "Request File") @RequestParam("file") MultipartFile file,
             @Parameter(description = "Payload Request") @RequestBody ResizeRequest request
     ) {
         try {
-            CompletableFuture<Void> future = processImageService.resizeImageAsync(file, request);
-            future.join();
-            return new ResponseEntity<>("Image resized successfully", HttpStatus.OK);
+            return getService().resizeImageAsync(file, request)
+                    .thenApply(ResponseEntity::ok)
+                    .exceptionally(throwable -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to resize image: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         }
     }
 
     @PostMapping("/thumbnail")
-    @Operation(summary = "Create thumbnail")
-    public ResponseEntity<String> createThumbnail(
+    @Operation(summary = "MinIO - Create Thumbnail", description = "MinIO - Create Thumbnail", tags = {"ProcessImageAPI"})
+    public CompletableFuture<ResponseEntity<Void>> createThumbnail(
             @Parameter(description = "Request File") @RequestParam("file") MultipartFile file,
             @Parameter(description = "Payload Request") @RequestBody ThumbnailRequest request
     ) {
         try {
-            CompletableFuture<Void> future = processImageService.createThumbnailAsync(file, request);
-            future.join();
-            return new ResponseEntity<>("Thumbnail created successfully", HttpStatus.OK);
+            return getService().createThumbnailAsync(file, request)
+                    .thenApply(ResponseEntity::ok)
+                    .exceptionally(throwable -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to create thumbnail: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         }
     }
 

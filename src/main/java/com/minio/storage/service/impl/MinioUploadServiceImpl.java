@@ -1,6 +1,6 @@
 package com.minio.storage.service.impl;
 
-import com.minio.storage.entities.File;
+import com.minio.storage.entities.FileInfo;
 import com.minio.storage.request.InputFileRequest;
 import com.minio.storage.service.MinioBucketService;
 import com.minio.storage.service.MinioUploadService;
@@ -50,24 +50,24 @@ public class MinioUploadServiceImpl implements MinioUploadService {
     }
 
     @Override
-    public CompletableFuture<List<File>> uploadMultipleFiles(List<MultipartFile> multipartFiles,
-                                                             InputFileRequest request) {
+    public CompletableFuture<List<FileInfo>> uploadMultipleFiles(List<MultipartFile> multipartFiles,
+                                                                 InputFileRequest request) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 // Kiểm tra nếu thư mục không tồn tại
                 minioBucketService.createBucketIfNotExists(request.getBucketName());
 
                 // Upload từng file và lưu thông tin vào danh sách
-                List<File> uploadedFiles = multipartFiles.stream()
+                List<FileInfo> uploadedFileInfos = multipartFiles.stream()
                         .map(multipartFile -> uploadFileAndSave(multipartFile, request))
                         .collect(Collectors.toList());
 
                 // Lưu danh sách thông tin vào cơ sở dữ liệu
-                if (ObjectUtils.isNotEmpty(uploadedFiles)) {
+                if (ObjectUtils.isNotEmpty(uploadedFileInfos)) {
 
                 }
 
-                return uploadedFiles;
+                return uploadedFileInfos;
             } catch (Exception e) {
                 throw new RuntimeException("Failed to upload files to MinIO: " + e.getMessage());
             }
@@ -93,7 +93,7 @@ public class MinioUploadServiceImpl implements MinioUploadService {
         });
     }
 
-    private File uploadFileAndSave(MultipartFile multipartFile, InputFileRequest request) {
+    private FileInfo uploadFileAndSave(MultipartFile multipartFile, InputFileRequest request) {
         try {
             String objectName = multipartFile.getOriginalFilename();
             ObjectWriteResponse writeResponse = minioClient.putObject(PutObjectArgs.builder()
@@ -103,9 +103,9 @@ public class MinioUploadServiceImpl implements MinioUploadService {
                     .build());
 
             // Tạo và trả về đối tượng UploadedFile
-            File file = new File();
-            file.setName(multipartFile.getOriginalFilename());
-            return file;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setName(multipartFile.getOriginalFilename());
+            return fileInfo;
         } catch (Exception e) {
             throw new RuntimeException("Failed to upload file: " + multipartFile.getOriginalFilename(), e);
         }

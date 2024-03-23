@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class FileRequestUtils {
+public class FindOptionalUtils {
 
     public static <T, R> R findFirstField(List<T> requests,
                                           Function<T, Boolean> filterPredicate,

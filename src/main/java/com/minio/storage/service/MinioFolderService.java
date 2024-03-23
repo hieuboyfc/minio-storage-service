@@ -6,6 +6,6 @@ import java.util.concurrent.CompletableFuture;
 
 public interface MinioFolderService {
 
-    CompletableFuture<?> createFolder(InputFileRequest request);
+    CompletableFuture<String> createFolder(InputFileRequest request);
 
 }
