@@ -1,4 +1,4 @@
-package com.minio.storage.utils;
+package com.minio.storage.utils.file;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.tika.config.TikaConfig;

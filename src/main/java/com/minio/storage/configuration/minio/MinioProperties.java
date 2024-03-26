@@ -1,31 +1,36 @@
 package com.minio.storage.configuration.minio;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 @Component
+@Configuration
 @ConfigurationProperties(prefix = "minio")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MinioProperties {
 
-    private Bucket bucket = new Bucket();
+    Bucket bucket = new Bucket();
 
-    private DefaultConfig defaultConfig = new DefaultConfig();
+    DefaultConfig defaultConfig = new DefaultConfig();
 
-    private Access access = new Access();
+    Access access = new Access();
 
-    private String url;
+    EndPoint endPoint = new EndPoint();
 
-    private String test;
+    private Long fileSize;
 
     public MinioProperties() {
     }
 
-    public MinioProperties(Bucket bucket, DefaultConfig defaultConfig, Access access, String url, String test) {
+    public MinioProperties(Bucket bucket, DefaultConfig defaultConfig, Access access, EndPoint endPoint, Long fileSize) {
         this.bucket = bucket;
         this.defaultConfig = defaultConfig;
         this.access = access;
-        this.url = url;
-        this.test = test;
+        this.endPoint = endPoint;
+        this.fileSize = fileSize;
     }
 
     public static class Bucket {
@@ -73,6 +78,36 @@ public class MinioProperties {
         }
     }
 
+    public static class EndPoint {
+        private String url;
+        private Integer port;
+        private boolean secure;
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public Integer getPort() {
+            return port;
+        }
+
+        public void setPort(Integer port) {
+            this.port = port;
+        }
+
+        public boolean isSecure() {
+            return secure;
+        }
+
+        public void setSecure(boolean secure) {
+            this.secure = secure;
+        }
+    }
+
     public Bucket getBucket() {
         return bucket;
     }
@@ -97,20 +132,20 @@ public class MinioProperties {
         this.access = access;
     }
 
-    public String getUrl() {
-        return url;
+    public EndPoint getEndPoint() {
+        return endPoint;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setEndPoint(EndPoint endPoint) {
+        this.endPoint = endPoint;
     }
 
-    public String getTest() {
-        return test;
+    public Long getFileSize() {
+        return fileSize;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
     }
 
 }

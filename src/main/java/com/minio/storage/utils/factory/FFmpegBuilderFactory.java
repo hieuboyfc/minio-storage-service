@@ -1,6 +1,6 @@
 package com.minio.storage.utils.factory;
 
-import com.minio.storage.request.VideoSettingRequest;
+import com.minio.storage.payload.request.VideoSettingRequest;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 
 import java.io.File;
@@ -35,29 +35,15 @@ public class FFmpegBuilderFactory {
 
         // Tùy chỉnh các thiết lập dựa trên định dạng file đầu vào
         switch (request.getFormatFile()) {
-            case FORMAT_MP4:
-                builder = customizeForMP4(builder, request);
-                break;
-            case FORMAT_MOV:
-                builder = customizeForMOV(builder, request);
-                break;
-            case FORMAT_AVI:
-                builder = customizeForAVI(builder, request);
-                break;
-            case FORMAT_MKV:
-                builder = customizeForMKV(builder, request);
-                break;
-            case FORMAT_WEBM:
-                builder = customizeForWebM(builder, request);
-                break;
-            case FORMAT_FLV:
-                builder = customizeForFLV(builder, request);
-                break;
-            case FORMAT_WMV:
-                builder = customizeForWMV(builder, request);
-                break;
-            default:
-                break;
+            case FORMAT_MP4 -> builder = customizeForMP4(builder, request);
+            case FORMAT_MOV -> builder = customizeForMOV(builder, request);
+            case FORMAT_AVI -> builder = customizeForAVI(builder, request);
+            case FORMAT_MKV -> builder = customizeForMKV(builder, request);
+            case FORMAT_WEBM -> builder = customizeForWebM(builder, request);
+            case FORMAT_FLV -> builder = customizeForFLV(builder, request);
+            case FORMAT_WMV -> builder = customizeForWMV(builder, request);
+            default -> {
+            }
         }
 
         // Thêm chức năng crop video vào

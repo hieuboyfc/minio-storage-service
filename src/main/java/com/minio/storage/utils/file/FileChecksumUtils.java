@@ -1,4 +1,4 @@
-package com.minio.storage.utils;
+package com.minio.storage.utils.file;
 
 import com.minio.storage.utils.constant.Constants;
 import com.minio.storage.utils.enums.HashAlgorithm;

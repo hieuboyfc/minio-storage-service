@@ -1,7 +1,7 @@
 package com.minio.storage.api;
 
 import com.minio.storage.entities.FileInfo;
-import com.minio.storage.request.InputFileRequest;
+import com.minio.storage.payload.request.InputFileRequest;
 import com.minio.storage.service.MinioUploadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -1,7 +1,6 @@
 package com.minio.storage.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.minio.storage.dto.FileAttributeDTO;
 import com.minio.storage.utils.MapperUtils;
 import com.minio.storage.utils.constant.Constants;
 import jakarta.persistence.*;
@@ -53,10 +52,6 @@ public class FileInfo extends XPersistableEntity {
 
     private String uploadState;
 
-    private Boolean deleted = false;
-
-    private String openkmId;
-
     public static FileInfo of(Long cid, String uid, String folder, String provider,
                               Object dto, String type, String publishType) {
         FileInfo fileInfo = MapperUtils.map(dto, FileInfo.class);
@@ -71,24 +66,6 @@ public class FileInfo extends XPersistableEntity {
         fileInfo.setPublishType(publishType);
         fileInfo.setUserId(uid);
         return fileInfo;
-    }
-
-    public FileAttributeDTO toAttribute() {
-        return FileAttributeDTO.builder().name(getName())
-                .id(getId())
-                .createBy(getCreateBy())
-                .contentType(getContentType())
-                .length(getLength())
-                .createDate(getCreateDate())
-                .hash(getHash())
-                .modifiedDate(getModifiedDate())
-                .updateBy(getUpdateBy())
-                .uploadState(getUploadState())
-                .bucket(getBucket())
-                .companyId(getCompanyId())
-                .folder(getFolder())
-                .uploadState(getUploadState())
-                .build();
     }
 
 }

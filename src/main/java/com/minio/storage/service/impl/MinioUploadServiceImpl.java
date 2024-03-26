@@ -1,8 +1,8 @@
 package com.minio.storage.service.impl;
 
 import com.minio.storage.entities.FileInfo;
-import com.minio.storage.request.InputFileRequest;
-import com.minio.storage.service.MinioBucketService;
+import com.minio.storage.payload.request.InputFileRequest;
+import com.minio.storage.service.MinioAdapterService;
 import com.minio.storage.service.MinioUploadService;
 import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class MinioUploadServiceImpl implements MinioUploadService {
 
     private final MinioClient minioClient;
-    private final MinioBucketService minioBucketService;
+    private final MinioAdapterService minioAdapterService;
 
     @Override
     public void uploadFile(MultipartFile multipartFile, InputFileRequest request) {
@@ -55,7 +55,7 @@ public class MinioUploadServiceImpl implements MinioUploadService {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 // Kiểm tra nếu thư mục không tồn tại
-                minioBucketService.createBucketIfNotExists(request.getBucketName());
+                minioAdapterService.makeBucket(request.getBucketName());
 
                 // Upload từng file và lưu thông tin vào danh sách
                 List<FileInfo> uploadedFileInfos = multipartFiles.stream()

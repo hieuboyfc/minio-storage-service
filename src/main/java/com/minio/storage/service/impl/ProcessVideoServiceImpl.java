@@ -1,7 +1,7 @@
 package com.minio.storage.service.impl;
 
 import com.minio.storage.utils.factory.FFmpegBuilderFactory;
-import com.minio.storage.request.VideoSettingRequest;
+import com.minio.storage.payload.request.VideoSettingRequest;
 import com.minio.storage.service.ProcessVideoService;
 import com.minio.storage.utils.StringGeneratorUtils;
 import lombok.RequiredArgsConstructor;

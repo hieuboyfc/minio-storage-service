@@ -51,4 +51,8 @@ minio:
   access:
     key: ${MINIO_ACCESS_KEY:tx49JFX7tZnjEDuWdact}
     secret: ${MINIO_ACCESS_SECRET:6MxkUcyzy1xeClwjlcNSRUfXgpQq7D0f4DmyZsyL}
-  url: ${MINIO_URL:http://14.225.211.86:9000}
+  endpoint:
+    url: ${MINIO_URL:http://14.225.211.86}
+    port: ${MINIO_PORT:9000}
+    secure: ${MINIO_SECURE:false}
+  file-size: ${MINIO_FILE_SIZE:1073741824} # Maximum file size

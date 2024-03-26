@@ -1,9 +1,9 @@
 package com.minio.storage.service.impl;
 
-import com.minio.storage.request.InputFileRequest;
+import com.minio.storage.payload.request.InputFileRequest;
 import com.minio.storage.service.MinioDownloadService;
 import com.minio.storage.utils.FindOptionalUtils;
-import com.minio.storage.utils.FileUtils;
+import com.minio.storage.utils.file.FileUtils;
 import com.minio.storage.utils.compression.RarUtils;
 import com.minio.storage.utils.compression.TarUtils;
 import com.minio.storage.utils.compression.ZipUtils;

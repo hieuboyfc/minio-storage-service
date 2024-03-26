@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MinioBucketInitializer {
 
-    private static final Logger log = LoggerFactory.getLogger(MinioBucketInitializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MinioBucketInitializer.class);
 
     private final MinioProperties minioProperties;
     private final MinioClient minioClient;
@@ -31,12 +31,12 @@ public class MinioBucketInitializer {
             if (Boolean.FALSE.equals(bucketExist)) {
                 MakeBucketArgs makeBucketArgs = MakeBucketArgs.builder().bucket(minioProperties.getBucket().getName()).build();
                 minioClient.makeBucket(makeBucketArgs);
-                log.info("Bucket: {} created successfully.", minioProperties.getBucket().getName());
+                LOGGER.info("Bucket: {} created successfully.", minioProperties.getBucket().getName());
             } else {
-                log.warn("Bucket: {} already exists.", minioProperties.getBucket().getName());
+                LOGGER.warn("Bucket: {} already exists.", minioProperties.getBucket().getName());
             }
         } catch (MinioException e) {
-            log.error("Error occurred while checking/creating Bucket: {}", e.getMessage());
+            LOGGER.error("Error occurred while checking/creating Bucket: {}", e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

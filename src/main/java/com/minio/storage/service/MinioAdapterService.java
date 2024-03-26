@@ -1,65 +1,45 @@
 package com.minio.storage.service;
 
-import com.minio.storage.configuration.minio.MinioProperties;
-import io.minio.GetObjectArgs;
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.MinioClient;
-import io.minio.errors.MinioException;
-import io.minio.http.Method;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import com.minio.storage.payload.response.FileResponse;
+import io.minio.messages.Bucket;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
-@Service
-public class MinioAdapterService {
+public interface MinioAdapterService {
 
-    private static final Logger log = LoggerFactory.getLogger(MinioAdapterService.class);
+    // Kiểm tra xem Bucket đã tồn tại chưa?
+    boolean bucketExists(String bucketName);
 
-    private final MinioProperties minioProperties;
-    private final MinioClient minioClient;
+    // Tạo một Bucket
+    void makeBucket(String bucketName);
 
-    public MinioAdapterService(MinioProperties minioProperties, MinioClient minioClient) {
-        this.minioProperties = minioProperties;
-        this.minioClient = minioClient;
-    }
+    // Liệt kê tất cả các tên bucket
+    List<String> listBucketName();
 
-    public InputStream downloadFile(String fileName) {
-        try {
-            return minioClient.getObject(
-                    GetObjectArgs.builder()
-                            .bucket(minioProperties.getBucket().getName())
-                            .object(fileName)
-                            .build()
-            );
-        } catch (MinioException e) {
-            throw new RuntimeException("Error occurred while downloading file: " + fileName, e);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
+    // Liệt kê tất cả các Bucket
+    List<Bucket> listBuckets();
 
-    public String getTempUrl(String objectName)
-            throws IOException, NoSuchAlgorithmException, InvalidKeyException, MinioException {
-        Map<String, String> requestParams = new HashMap<>();
-        requestParams.put("response-content-type", "application/json");
-        String url = minioClient.getPresignedObjectUrl(
-                GetPresignedObjectUrlArgs.builder()
-                        .method(Method.GET)
-                        .bucket(minioProperties.getBucket().getName())
-                        .object(objectName)
-                        .expiry(2, TimeUnit.HOURS)
-                        .extraQueryParams(requestParams)
-                        .build());
-        log.info(url);
-        return url;
-    }
+    // Xóa Bucket bằng Tên
+    boolean removeBucket(String bucketName);
+
+    // Liệt kê tất cả các tên đối tượng trong Bucket
+    List<String> listObjectNames(String bucketName);
+
+    // Tải lên các tệp vào Bucket
+    FileResponse putObject(MultipartFile multipartFile, String bucketName);
+
+    // Tải xuống tệp từ Bucket
+    InputStream downloadObject(String bucketName, String objectName);
+
+    // Xóa tệp trong Bucket
+    boolean removeObject(String bucketName, String objectName);
+
+    // Xóa tất cả các tệp trong Bucket
+    boolean removeListObject(String bucketName, List<String> objectNameList);
+
+    // Lấy đường dẫn tệp từ Bucket
+    String getObjectUrl(String bucketName, String objectName);
 
 }

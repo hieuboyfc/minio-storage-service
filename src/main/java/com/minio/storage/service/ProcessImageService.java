@@ -1,8 +1,8 @@
 package com.minio.storage.service;
 
-import com.minio.storage.request.InputFileRequest;
-import com.minio.storage.request.ResizeRequest;
-import com.minio.storage.request.ThumbnailRequest;
+import com.minio.storage.payload.request.InputFileRequest;
+import com.minio.storage.payload.request.ResizeRequest;
+import com.minio.storage.payload.request.ThumbnailRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.concurrent.CompletableFuture;

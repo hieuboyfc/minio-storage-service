@@ -1,6 +1,6 @@
 package com.minio.storage.service;
 
-import com.minio.storage.request.InputFileRequest;
+import com.minio.storage.payload.request.InputFileRequest;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

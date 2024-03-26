@@ -1,6 +1,6 @@
 package com.minio.storage.api;
 
-import com.minio.storage.request.VideoSettingRequest;
+import com.minio.storage.payload.request.VideoSettingRequest;
 import com.minio.storage.service.ProcessVideoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

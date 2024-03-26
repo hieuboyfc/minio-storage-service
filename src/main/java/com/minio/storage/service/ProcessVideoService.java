@@ -1,6 +1,6 @@
 package com.minio.storage.service;
 
-import com.minio.storage.request.VideoSettingRequest;
+import com.minio.storage.payload.request.VideoSettingRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.concurrent.CompletableFuture;

@@ -1,4 +1,4 @@
-package com.minio.storage.request;
+package com.minio.storage.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.minio.storage.service;
 
 import com.minio.storage.entities.FileInfo;
-import com.minio.storage.request.InputFileRequest;
+import com.minio.storage.payload.request.InputFileRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;

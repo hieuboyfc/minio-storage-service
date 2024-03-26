@@ -1,4 +1,4 @@
-package com.minio.storage.request;
+package com.minio.storage.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThumbnailRequest extends InputFileRequest {
+public class ResizeRequest extends InputFileRequest {
 
-    private int thumbnailWidth;
-    private int thumbnailHeight;
+    private int scaledWidth;
+    private int scaledHeight;
 
 }

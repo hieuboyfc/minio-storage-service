@@ -1,7 +1,7 @@
 package com.minio.storage.service.impl;
 
-import com.minio.storage.request.InputFileRequest;
-import com.minio.storage.service.MinioBucketService;
+import com.minio.storage.payload.request.InputFileRequest;
+import com.minio.storage.service.MinioAdapterService;
 import com.minio.storage.service.MinioFolderService;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class MinioFolderServiceImpl implements MinioFolderService {
 
     private final MinioClient minioClient;
-    private final MinioBucketService minioBucketService;
+    private final MinioAdapterService minioAdapterService;
 
     @Override
     public CompletableFuture<String> createFolder(InputFileRequest request) {
@@ -25,7 +25,7 @@ public class MinioFolderServiceImpl implements MinioFolderService {
                 String folderPath = request.getFolderName() + "/";
 
                 // Kiểm tra nếu thư mục không tồn tại
-                minioBucketService.createBucketIfNotExists(request.getBucketName());
+                minioAdapterService.makeBucket(request.getBucketName());
 
                 // Tạo một object với nội dung trống để tạo thư mục trên MinIO
                 minioClient.putObject(PutObjectArgs

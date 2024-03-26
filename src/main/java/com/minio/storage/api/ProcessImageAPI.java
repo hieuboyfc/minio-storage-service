@@ -1,8 +1,8 @@
 package com.minio.storage.api;
 
-import com.minio.storage.request.InputFileRequest;
-import com.minio.storage.request.ResizeRequest;
-import com.minio.storage.request.ThumbnailRequest;
+import com.minio.storage.payload.request.InputFileRequest;
+import com.minio.storage.payload.request.ResizeRequest;
+import com.minio.storage.payload.request.ThumbnailRequest;
 import com.minio.storage.service.ProcessImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
