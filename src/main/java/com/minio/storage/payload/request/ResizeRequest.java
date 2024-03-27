@@ -1,9 +1,7 @@
 package com.minio.storage.payload.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 @Setter
@@ -11,9 +9,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResizeRequest extends InputFileRequest {
 
-    private int scaledWidth;
-    private int scaledHeight;
+    int scaledWidth;
+
+    int scaledHeight;
 
 }

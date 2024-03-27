@@ -1,9 +1,7 @@
 package com.minio.storage.payload.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 @Setter
@@ -11,24 +9,25 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class InputFileRequest {
 
-    private String inputFilePath;
+    String inputFilePath;
 
-    private String outputFilePath;
+    String outputFilePath;
 
-    private String formatName;
+    String formatName;
 
-    private String outputFormatFile;
+    String outputFormatFile;
 
-    private String folderName;
+    String folderName;
 
-    private String bucketName;
+    String bucketName;
 
-    private String objectName;
+    String objectName;
 
-    private Boolean isCompressFile;
+    Boolean isCompressFile;
 
-    private String typeCompressFile;
+    String typeCompressFile;
 
 }

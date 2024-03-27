@@ -16,10 +16,10 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 public class FileInfo extends XPersistableEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(length = 50)
     private String id;
 
@@ -43,7 +43,7 @@ public class FileInfo extends XPersistableEntity {
 
     private String provider;
 
-    // owner,temp,share
+    // Owner, Temp, Share
     private String type;
 
     private String publishType;

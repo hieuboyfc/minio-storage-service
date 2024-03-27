@@ -1,9 +1,7 @@
 package com.minio.storage.payload.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 @Setter
@@ -11,24 +9,25 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class VideoSettingRequest {
 
-    private int startX;
+    int startX;
 
-    private int startY;
+    int startY;
 
-    private int width;
+    int width;
 
-    private int height;
+    int height;
 
-    private int frameRate;
+    int frameRate;
 
-    private String formatFile;
+    String formatFile;
 
-    private int audioChannels = 2;
+    int audioChannels;
 
-    private Boolean cropVideo;
+    Boolean cropVideo;
 
-    private long timeInSeconds;
+    long timeInSeconds;
 
 }

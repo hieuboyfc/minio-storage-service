@@ -1,11 +1,12 @@
 package com.minio.storage.service.impl;
 
-import com.minio.storage.utils.factory.FFmpegBuilderFactory;
 import com.minio.storage.payload.request.VideoSettingRequest;
 import com.minio.storage.service.ProcessVideoService;
 import com.minio.storage.utils.StringGeneratorUtils;
+import com.minio.storage.utils.factory.FFmpegBuilderFactory;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import net.bramp.ffmpeg.FFmpeg;
+import lombok.experimental.FieldDefaults;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
@@ -21,13 +22,10 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProcessVideoServiceImpl implements ProcessVideoService {
 
-    private final FFmpegExecutor ffmpegExecutor;
-
-    public ProcessVideoServiceImpl() throws IOException {
-        this.ffmpegExecutor = new FFmpegExecutor(new FFmpeg());
-    }
+    // FFmpegExecutor ffmpegExecutor;
 
     @Override
     public CompletableFuture<String> processVideo(MultipartFile file, VideoSettingRequest request) {
@@ -56,7 +54,7 @@ public class ProcessVideoServiceImpl implements ProcessVideoService {
                 FFmpegBuilder builder = FFmpegBuilderFactory.createFFmpegBuilder(sourceFile, outputFile, request);
 
                 // Thực hiện lệnh FFmpeg
-                ffmpegExecutor.createJob(builder).run();
+                // ffmpegExecutor.createJob(builder).run();
 
                 // Trả về đường dẫn của file đích (video)
                 return outputFile.getAbsolutePath();
@@ -87,7 +85,7 @@ public class ProcessVideoServiceImpl implements ProcessVideoService {
                         .done();
 
                 // Thực hiện lệnh FFmpeg để tạo Thumbnail
-                ffmpegExecutor.createJob(thumbnailBuilder).run();
+                // ffmpegExecutor.createJob(thumbnailBuilder).run();
 
                 // Trả về đường dẫn của thumbnail
                 return thumbFile.getAbsolutePath();

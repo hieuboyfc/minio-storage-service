@@ -3,7 +3,6 @@ package com.minio.storage.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
 
@@ -12,13 +11,12 @@ import java.util.Date;
 @Setter
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class BucketConfig extends XPersistableEntity {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(length = 50)
     private String id;
 
