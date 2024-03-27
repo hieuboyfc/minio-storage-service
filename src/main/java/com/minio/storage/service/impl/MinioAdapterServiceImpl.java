@@ -252,19 +252,15 @@ public class MinioAdapterServiceImpl implements MinioAdapterService {
     }
 
     private void putObject(String bucketName, MultipartFile multipartFile, String filename, String fileType) {
-        try {
-            InputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes());
-
-            minioClient.putObject(PutObjectArgs
-                    .builder()
+        try (InputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes())) {
+            minioClient.putObject(PutObjectArgs.builder()
                     .bucket(bucketName)
                     .object(filename)
                     .stream(inputStream, -1, minioProperties.getFileSize())
                     .contentType(fileType)
-                    .build()
-            );
+                    .build());
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
