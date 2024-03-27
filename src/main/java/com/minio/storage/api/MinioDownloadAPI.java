@@ -25,7 +25,7 @@ public class MinioDownloadAPI {
         this.service = service;
     }
 
-    @GetMapping
+    @PostMapping
     @Operation(summary = "MinIO - Download File", description = "MinIO - Download File", tags = {"MinioDownloadAPI"})
     public CompletableFuture<ResponseEntity<byte[]>> downloadFile(
             @Parameter(description = "Payload Request") @RequestBody InputFileRequest request

@@ -44,7 +44,7 @@ public class MinioDownloadServiceImpl implements MinioDownloadService {
                 // Chuyển đổi InputStream thành mảng byte
                 return IOUtils.toByteArray(inputStream);
             } catch (Exception e) {
-                throw new RuntimeException("Failed to download file: " + e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         });
     }
@@ -66,7 +66,7 @@ public class MinioDownloadServiceImpl implements MinioDownloadService {
             }
 
             boolean isCompressFile = FindOptionalUtils.findFirstField(
-                    requests, InputFileRequest::getIsCompressFile,
+                    requests, o -> ObjectUtils.isNotEmpty(o.getIsCompressFile()),
                     InputFileRequest::getIsCompressFile, false
             );
 
