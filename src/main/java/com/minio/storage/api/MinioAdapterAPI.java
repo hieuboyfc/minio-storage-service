@@ -8,17 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +32,8 @@ public class MinioAdapterAPI {
     @PostMapping("/upload-file")
     @Operation(summary = "MinIO - Upload File", description = "MinIO - Upload File", tags = {"MinioAdapterAPI"})
     public ResponseEntity<?> uploadFile(
-            @Parameter(description = "Request File") MultipartFile multipartFile,
-            @Parameter(description = "String Bucket Name") String bucketName
+            @Parameter(description = "Request File") @RequestParam MultipartFile multipartFile,
+            @Parameter(description = "String Bucket Name") @RequestParam String bucketName
     ) {
         return ResponseEntity.ok(minioAdapterService.putObject(multipartFile, bucketName));
     }
@@ -50,9 +44,9 @@ public class MinioAdapterAPI {
         minioAdapterService.makeBucket(bucketName);
     }
 
-    @GetMapping("/show-bucket/{bucketName}")
-    @Operation(summary = "MinIO - Show Bucket", description = "MinIO - Show Bucket", tags = {"MinioAdapterAPI"})
-    public ResponseEntity<?> showBucket(@Parameter(description = "Path Variable Bucket Name") @PathVariable String bucketName) {
+    @GetMapping("/show-object/{bucketName}")
+    @Operation(summary = "MinIO - Show Object", description = "MinIO - Show Object", tags = {"MinioAdapterAPI"})
+    public ResponseEntity<?> showObject(@Parameter(description = "Path Variable Bucket Name") @PathVariable String bucketName) {
         return ResponseEntity.ok(minioAdapterService.listObjectNames(bucketName));
     }
 
@@ -71,8 +65,8 @@ public class MinioAdapterAPI {
     @DeleteMapping("/remove-object/{bucketName}/{objectName}")
     @Operation(summary = "MinIO - Remove Object", description = "MinIO - Remove Object", tags = {"MinioAdapterAPI"})
     public ResponseEntity<?> removeObject(
-            @Parameter(description = "Path Variable Bucket Name") @PathVariable("bucketName") String bucketName,
-            @Parameter(description = "Path Variable Object Name") @PathVariable("objectName") String objectName
+            @Parameter(description = "Path Variable Bucket Name") @PathVariable String bucketName,
+            @Parameter(description = "Path Variable Object Name") @PathVariable String objectName
     ) {
         return ResponseEntity.ok(minioAdapterService.removeObject(bucketName, objectName));
     }
@@ -80,7 +74,7 @@ public class MinioAdapterAPI {
     @DeleteMapping("/remove-list-object/{bucketName}")
     @Operation(summary = "MinIO - Remove List Object", description = "MinIO - Remove List Object", tags = {"MinioAdapterAPI"})
     public ResponseEntity<?> removeListObject(
-            @Parameter(description = "Path Variable Bucket Name") @PathVariable("bucketName") String bucketName,
+            @Parameter(description = "Path Variable Bucket Name") @PathVariable String bucketName,
             @Parameter(description = "Request List String") @RequestBody List<String> listObjectNames
     ) {
         return ResponseEntity.ok(minioAdapterService.removeListObject(bucketName, listObjectNames));
@@ -94,7 +88,7 @@ public class MinioAdapterAPI {
         Map<String, String> resultMap = new HashMap<>();
         List<String> listObjectNames = minioAdapterService.listObjectNames(bucketName);
 
-        String url = "localhost:" + portNumber + "/minio/download/" + bucketName + "/";
+        String url = "http://localhost:" + portNumber + "/minio/download/" + bucketName + "/";
         for (String listObjectName : listObjectNames) {
             resultMap.put(listObjectName, url + listObjectName);
         }
@@ -106,24 +100,10 @@ public class MinioAdapterAPI {
     @Operation(summary = "MinIO - Download File", description = "MinIO - Download File", tags = {"MinioAdapterAPI"})
     public void downloadFile(
             @Parameter(description = "Http Servlet Response") HttpServletResponse response,
-            @Parameter(description = "Path Variable Bucket Name") @PathVariable("bucketName") String bucketName,
-            @Parameter(description = "Path Variable Object Name") @PathVariable("objectName") String objectName
-    ) throws IOException {
-        InputStream inputStream = null;
-        try {
-            inputStream = minioAdapterService.downloadObject(bucketName, objectName);
-            response.setHeader("Content-Disposition", "attachment;filename="
-                    + URLEncoder.encode(objectName, StandardCharsets.UTF_8));
-            response.setCharacterEncoding("UTF-8");
-            // Remove bytes from InputStream Copied to the OutputStream.
-            IOUtils.copy(inputStream, response.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (ObjectUtils.isNotEmpty(inputStream)) {
-                inputStream.close();
-            }
-        }
+            @Parameter(description = "Path Variable Bucket Name") @PathVariable String bucketName,
+            @Parameter(description = "Path Variable Object Name") @PathVariable String objectName
+    ) {
+        minioAdapterService.downloadObject(response, bucketName, objectName);
     }
 
 }

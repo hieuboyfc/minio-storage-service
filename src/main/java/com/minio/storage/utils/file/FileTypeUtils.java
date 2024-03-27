@@ -1,6 +1,8 @@
 package com.minio.storage.utils.file;
 
 import cn.hutool.core.io.FileTypeUtil;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,17 +12,18 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FileTypeUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileTypeUtils.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(FileTypeUtils.class);
 
-    private static final String IMAGE_TYPE = "IMAGE_TYPE_";
-    private static final String AUDIO_TYPE = "AUDIO_TYPE_";
-    private static final String VIDEO_TYPE = "VIDEO_TYPE_";
-    private static final String APPLICATION_TYPE = "APPLICATION_TYPE_";
-    private static final String TXT_TYPE = "TXT_TYPE_";
+    static final String IMAGE_TYPE = "image/";
+    static final String AUDIO_TYPE = "audio/";
+    static final String VIDEO_TYPE = "video/";
+    static final String APPLICATION_TYPE = "application/";
+    static final String TXT_TYPE = "txt/";
 
-    private static final Map<String, String> fileTypes = new HashMap<>();
+    static final Map<String, String> fileTypes = new HashMap<>();
 
     static {
         // Image types

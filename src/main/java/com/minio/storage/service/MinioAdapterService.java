@@ -2,9 +2,9 @@ package com.minio.storage.service;
 
 import com.minio.storage.payload.response.FileResponse;
 import io.minio.messages.Bucket;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
 import java.util.List;
 
 public interface MinioAdapterService {
@@ -31,7 +31,7 @@ public interface MinioAdapterService {
     FileResponse putObject(MultipartFile multipartFile, String bucketName);
 
     // Tải xuống tệp từ Bucket
-    InputStream downloadObject(String bucketName, String objectName);
+    void downloadObject(HttpServletResponse response, String bucketName, String objectName);
 
     // Xóa tệp trong Bucket
     boolean removeObject(String bucketName, String objectName);

@@ -67,10 +67,10 @@ minio:
   default:
     folder: /
   access:
-    key: ${MINIO_ACCESS_KEY:tx49JFX7tZnjEDuWdact}
-    secret: ${MINIO_ACCESS_SECRET:6MxkUcyzy1xeClwjlcNSRUfXgpQq7D0f4DmyZsyL}
+    key: ${MINIO_ACCESS_KEY:LSKwqEWJl85j2aW73WEF}
+    secret: ${MINIO_ACCESS_SECRET:jfgFEkfkG1bjJReyzofIweuo0mpkNOMhJiEToRwE}
   endpoint:
-    url: ${MINIO_URL:http://14.225.211.86}
+    url: ${MINIO_URL:http://localhost}
     port: ${MINIO_PORT:9000}
     secure: ${MINIO_SECURE:false}
   file-size: ${MINIO_FILE_SIZE:1073741824} # Maximum file size

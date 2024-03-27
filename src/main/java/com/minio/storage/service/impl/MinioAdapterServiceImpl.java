@@ -11,9 +11,11 @@ import io.minio.messages.Bucket;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -22,7 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -89,13 +94,6 @@ public class MinioAdapterServiceImpl implements MinioAdapterService {
                 if (ObjectUtils.isNotEmpty(myObjects) && myObjects.iterator().hasNext()) {
                     return false;
                 }
-
-                /*for (Result<Item> result : myObjects) {
-                    Item item = result.get();
-                    if (item.size() > 0) {
-                        return false;
-                    }
-                }*/
 
                 minioClient.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
 
@@ -166,8 +164,17 @@ public class MinioAdapterServiceImpl implements MinioAdapterService {
     }
 
     @Override
-    public InputStream downloadObject(String bucketName, String objectName) {
-        return getObject(bucketName, objectName);
+    public void downloadObject(HttpServletResponse response, String bucketName, String objectName) {
+        try (InputStream inputStream = getObject(bucketName, objectName)) {
+            if (ObjectUtils.isNotEmpty(inputStream)) {
+                response.setHeader("Content-Disposition", "attachment;filename="
+                        + URLEncoder.encode(objectName, StandardCharsets.UTF_8));
+                response.setCharacterEncoding("UTF-8");
+                IOUtils.copy(inputStream, response.getOutputStream());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -273,9 +280,7 @@ public class MinioAdapterServiceImpl implements MinioAdapterService {
                         .build());
 
                 StatObjectResponse statObject = statObject(bucketName, objectName);
-                if (ObjectUtils.isNotEmpty(statObject)) {
-                    return true;
-                }
+                return ObjectUtils.isNotEmpty(statObject);
             }
             return false;
         } catch (Exception e) {
